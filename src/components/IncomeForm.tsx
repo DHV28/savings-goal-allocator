@@ -74,6 +74,7 @@ export default function IncomeForm({ goals, onConfirm, onCancel }: Props) {
               type="date"
               value={date}
               onChange={e => setDate(e.target.value)}
+              style={{ colorScheme: 'dark' }}
               className="w-full bg-[#12141e] border border-[#2a2d3a] rounded-xl px-4 py-3 text-gray-100 outline-none focus:border-[#86efac]/50 transition-colors"
             />
           </div>

@@ -18,8 +18,8 @@ const COLOUR_OPTIONS = [
   '#93c5fd', // pastel blue
   '#c4b5fd', // pastel purple
   '#fde68a', // pastel yellow
-  '#fca5a5', // pastel red/pink
-  '#6ee7b7', // pastel teal
+  '#fca5a5', // pastel pink
+  '#fdba74', // pastel orange
 ]
 
 function generateId() {
@@ -117,6 +117,7 @@ export default function GoalForm({ existingGoal, defaultAllocationPercent, unall
               type="date"
               value={deadline}
               onChange={e => setDeadline(e.target.value)}
+              style={{ colorScheme: 'dark' }}
               className="w-full bg-[#12141e] border border-[#2a2d3a] rounded-xl px-4 py-3 text-gray-100 outline-none focus:border-[#86efac]/50 transition-colors"
             />
           </div>
