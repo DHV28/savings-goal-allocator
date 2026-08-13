@@ -34,7 +34,7 @@ export default function Dashboard({
       : null
 
   return (
-    <div className="min-h-screen bg-[#0f1117] text-gray-100 px-4 py-8 max-w-2xl mx-auto">
+    <div className="min-h-screen bg-[#0f1117] text-gray-100 px-6 py-8 max-w-5xl mx-auto">
 
       {/* Header */}
       <div className="mb-8">
@@ -80,7 +80,7 @@ export default function Dashboard({
           <p className="text-sm mt-1">Add your first savings goal to get started</p>
         </div>
       ) : (
-        <div className="flex flex-col gap-4 mb-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
           {goals.map(goal => (
             <GoalCard
               key={goal.id}
