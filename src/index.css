@@ -1,9 +1,6 @@
 @import "tailwindcss";
 
-@theme {
-  --color-green-accent: #22c55e;
-  --color-bg-primary: #0f1117;
-  --color-bg-card: #1a1d27;
-  --color-bg-input: #12141e;
-  --color-border: #2a2d3a;
+body {
+  background-color: #0f1117;
+  margin: 0;
 }
