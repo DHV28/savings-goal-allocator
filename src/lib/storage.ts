@@ -31,3 +31,13 @@ export function loadIncome(): IncomeEntry[] {
 export function saveIncome(entries: IncomeEntry[]): void {
   localStorage.setItem(INCOME_KEY, JSON.stringify(entries))
 }
+
+// Unallocated pool — money from past income entries that wasn't assigned to any goal.
+// Gets automatically applied to the next new goal the user creates.
+export function loadUnallocatedPool(): number {
+  return parseFloat(localStorage.getItem('unallocatedPool') ?? '0') || 0
+}
+
+export function saveUnallocatedPool(amount: number): void {
+  localStorage.setItem('unallocatedPool', String(amount))
+}

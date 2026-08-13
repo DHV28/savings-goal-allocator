@@ -5,7 +5,9 @@ import { useState } from 'react'
 import type { Goal } from '../types'
 
 interface Props {
-  existingGoal?: Goal  // if passed in, we're editing — otherwise adding
+  existingGoal?: Goal      // if passed in, we're editing — otherwise adding
+  defaultAllocationPercent?: number  // pre-filled with remaining unallocated % when adding
+  unallocatedPool?: number           // money sitting unallocated from past income entries
   onSave: (goal: Goal) => void
   onCancel: () => void
 }
@@ -24,13 +26,15 @@ function generateId() {
   return Math.random().toString(36).slice(2, 10)
 }
 
-export default function GoalForm({ existingGoal, onSave, onCancel }: Props) {
-  // Pre-fill fields if editing, otherwise start blank
+export default function GoalForm({ existingGoal, defaultAllocationPercent, unallocatedPool = 0, onSave, onCancel }: Props) {
+  // Pre-fill fields if editing, otherwise start blank (allocation % defaults to remaining unallocated)
   const [name, setName] = useState(existingGoal?.name ?? '')
   const [targetAmount, setTargetAmount] = useState(existingGoal?.targetAmount?.toString() ?? '')
   const [currentAmount, setCurrentAmount] = useState(existingGoal?.currentAmount?.toString() ?? '0')
   const [deadline, setDeadline] = useState(existingGoal?.deadline ?? '')
-  const [allocationPercent, setAllocationPercent] = useState(existingGoal?.allocationPercent?.toString() ?? '')
+  const [allocationPercent, setAllocationPercent] = useState(
+    existingGoal?.allocationPercent?.toString() ?? defaultAllocationPercent?.toString() ?? ''
+  )
   const [color, setColor] = useState(existingGoal?.color ?? COLOUR_OPTIONS[0])
   const [error, setError] = useState('')
 
@@ -152,6 +156,13 @@ export default function GoalForm({ existingGoal, onSave, onCancel }: Props) {
               ))}
             </div>
           </div>
+
+          {/* Show the user that their unallocated pool will be applied to this goal */}
+          {unallocatedPool > 0 && (
+            <div className="bg-[#86efac]/10 border border-[#86efac]/20 rounded-xl px-4 py-3 text-sm text-[#86efac]">
+              💰 ${unallocatedPool} from past unallocated income will be added to this goal automatically.
+            </div>
+          )}
 
           {/* Error message */}
           {error && (

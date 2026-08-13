@@ -1,12 +1,14 @@
-// The main screen — shows all goals, total allocation status, and action buttons.
+// The main screen — shows all goals, warnings, and action buttons.
 
 import type { Goal } from '../types'
 import { getTotalAllocated } from '../lib/allocation'
+import { getGoalProgress } from '../lib/goalProgress'
 import GoalCard from './GoalCard'
 
 interface Props {
   goals: Goal[]
   monthlyIncome: number
+  unallocatedPool: number  // money from past income entries not yet assigned to any goal
   onMonthlyIncomeChange: (amount: number) => void
   onAddGoal: () => void
   onEditGoal: (goal: Goal) => void
@@ -17,6 +19,7 @@ interface Props {
 export default function Dashboard({
   goals,
   monthlyIncome,
+  unallocatedPool,
   onMonthlyIncomeChange,
   onAddGoal,
   onEditGoal,
@@ -25,59 +28,89 @@ export default function Dashboard({
 }: Props) {
   const totalPercent = getTotalAllocated(goals)
 
-  // Warn if percentages don't add up to 100
   const allocationWarning =
     goals.length > 0 && totalPercent !== 100
       ? totalPercent > 100
         ? `Over-allocated by ${totalPercent - 100}%`
-        : `${100 - totalPercent}% of income unallocated`
+        : `${100 - totalPercent}% unallocated`
       : null
 
+  // Goals where current monthly allocation won't hit the target in time
+  const goalsAtRisk = goals.filter(goal => {
+    const { status } = getGoalProgress(goal, monthlyIncome)
+    return status === 'behind'
+  })
+
   return (
-    <div className="min-h-screen bg-[#0f1117] text-gray-100 px-6 py-8 max-w-5xl mx-auto">
+    <div className="min-h-screen bg-[#0f1117] text-gray-100 px-6 py-10 max-w-5xl mx-auto">
 
-      {/* Header */}
-      <div className="mb-8">
-        <h1 className="text-2xl font-bold text-gray-100 mb-1">Savings Goals</h1>
-        <p className="text-gray-500 text-sm">Track where your money is going each month</p>
-      </div>
-
-      {/* Monthly income input — needed to calculate paces */}
-      <div className="bg-[#1a1d27] border border-[#2a2d3a] rounded-2xl p-4 mb-6 flex items-center gap-4">
-        <div className="flex-1">
-          <p className="text-xs text-gray-500 mb-1">Typical monthly income</p>
-          <div className="flex items-center gap-2">
-            <span className="text-gray-400">$</span>
-            <input
-              type="number"
-              value={monthlyIncome || ''}
-              onChange={e => onMonthlyIncomeChange(parseFloat(e.target.value) || 0)}
-              placeholder="e.g. 3000"
-              className="bg-transparent text-gray-100 text-lg font-semibold outline-none w-full placeholder:text-gray-600"
-            />
-          </div>
+      {/* Header row — title + actions */}
+      <div className="flex items-center justify-between mb-8">
+        <div>
+          <h1 className="text-2xl font-bold text-gray-100">Savings Goals</h1>
+          <p className="text-gray-500 text-sm mt-0.5">Track where your money goes each month</p>
         </div>
         <button
           onClick={onLogIncome}
-          className="bg-[#86efac] text-[#0f1117] font-semibold text-sm px-4 py-2 rounded-xl hover:bg-[#6ee7a0] transition-colors whitespace-nowrap"
+          className="bg-[#86efac] text-[#0f1117] font-semibold text-sm px-5 py-2.5 rounded-xl hover:bg-[#6ee7a0] transition-colors"
         >
-          Log Income
+          + Log Income
         </button>
       </div>
 
-      {/* Allocation warning */}
-      {allocationWarning && (
-        <div className="bg-[#fde68a]/10 border border-[#fde68a]/30 text-[#fde68a] text-sm rounded-xl px-4 py-3 mb-5">
-          ⚠ {allocationWarning} — edit your goals to fix the split.
+      {/* Monthly income — shown inline, labelled clearly as what drives the pace calculations */}
+      <div className="flex items-center gap-3 mb-8">
+        <span className="text-gray-500 text-sm">Monthly income used for calculations:</span>
+        <div className="flex items-center gap-1 bg-[#1a1d27] border border-[#2a2d3a] rounded-xl px-3 py-1.5">
+          <span className="text-gray-400 text-sm">$</span>
+          <input
+            type="number"
+            value={monthlyIncome || ''}
+            onChange={e => onMonthlyIncomeChange(parseFloat(e.target.value) || 0)}
+            placeholder="3000"
+            className="bg-transparent text-gray-100 text-sm font-semibold outline-none w-24 placeholder:text-gray-600"
+          />
+        </div>
+        {allocationWarning && (
+          <span className="text-[#fde68a] text-xs">⚠ {allocationWarning}</span>
+        )}
+      </div>
+
+      {/* Goals at risk — only shown when there's a problem worth flagging */}
+      {goalsAtRisk.length > 0 && monthlyIncome > 0 && (
+        <div className="border border-[#fca5a5]/20 bg-[#fca5a5]/5 rounded-2xl px-5 py-4 mb-6">
+          <p className="text-[#fca5a5] text-sm font-semibold mb-3">
+            {goalsAtRisk.length} goal{goalsAtRisk.length > 1 ? 's' : ''} won't be reached in time
+          </p>
+          <div className="flex flex-col gap-2">
+            {goalsAtRisk.map(goal => {
+              const { requiredPerMonth, projectedPerMonth } = getGoalProgress(goal, monthlyIncome)
+              const shortfall = parseFloat((requiredPerMonth - projectedPerMonth).toFixed(2))
+              return (
+                <div key={goal.id} className="flex items-center justify-between text-sm">
+                  <div className="flex items-center gap-2">
+                    <div className="w-2 h-2 rounded-full" style={{ backgroundColor: goal.color }} />
+                    <span className="text-gray-300">{goal.name}</span>
+                  </div>
+                  <span className="text-gray-500 text-xs">
+                    ${shortfall} short per month —{' '}
+                    <button onClick={() => onEditGoal(goal)} className="text-[#93c5fd] hover:underline">
+                      fix it
+                    </button>
+                  </span>
+                </div>
+              )
+            })}
+          </div>
         </div>
       )}
 
       {/* Goal cards */}
       {goals.length === 0 ? (
-        <div className="text-center text-gray-600 py-20">
+        <div className="text-center py-24">
           <p className="text-4xl mb-4">🎯</p>
           <p className="text-lg font-medium text-gray-400">No goals yet</p>
-          <p className="text-sm mt-1">Add your first savings goal to get started</p>
+          <p className="text-sm text-gray-600 mt-1">Add your first savings goal to get started</p>
         </div>
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
@@ -93,10 +126,20 @@ export default function Dashboard({
         </div>
       )}
 
-      {/* Add goal button */}
+      {/* Unallocated pool notice — shown when there's leftover money from past income entries */}
+      {unallocatedPool > 0 && (
+        <div className="bg-[#86efac]/5 border border-[#86efac]/20 rounded-2xl px-5 py-3 mb-4 flex items-center justify-between text-sm">
+          <span className="text-gray-400">
+            💰 <span className="text-[#86efac] font-medium">${unallocatedPool}</span> unallocated — will go to your next new goal
+          </span>
+          <button onClick={onAddGoal} className="text-[#86efac] text-xs hover:underline">Add a goal</button>
+        </div>
+      )}
+
+      {/* Add goal */}
       <button
         onClick={onAddGoal}
-        className="w-full border-2 border-dashed border-[#2a2d3a] hover:border-[#86efac]/50 text-gray-500 hover:text-[#86efac] rounded-2xl py-4 text-sm font-medium transition-colors"
+        className="w-full border-2 border-dashed border-[#2a2d3a] hover:border-[#86efac]/40 text-gray-600 hover:text-[#86efac] rounded-2xl py-4 text-sm font-medium transition-colors"
       >
         + Add Goal
       </button>

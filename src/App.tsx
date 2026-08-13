@@ -3,7 +3,8 @@
 
 import { useState } from 'react'
 import type { Goal, IncomeEntry, AllocationResult } from './types'
-import { loadGoals, saveGoals, loadIncome, saveIncome } from './lib/storage'
+import { loadGoals, saveGoals, loadIncome, saveIncome, loadUnallocatedPool, saveUnallocatedPool } from './lib/storage'
+import { getTotalAllocated } from './lib/allocation'
 import Dashboard from './components/Dashboard'
 import GoalForm from './components/GoalForm'
 import IncomeForm from './components/IncomeForm'
@@ -20,6 +21,7 @@ function App() {
   const [goals, setGoals] = useState<Goal[]>(loadGoals)
   const [incomeEntries, setIncomeEntries] = useState<IncomeEntry[]>(loadIncome)
   const [monthlyIncome, setMonthlyIncome] = useState<number>(loadMonthlyIncome)
+  const [unallocatedPool, setUnallocatedPool] = useState<number>(loadUnallocatedPool)
   const [view, setView] = useState<View>('dashboard')
   const [goalToEdit, setGoalToEdit] = useState<Goal | null>(null)
 
@@ -33,9 +35,21 @@ function App() {
   }
 
   function handleSaveGoal(goal: Goal) {
+    let finalGoal = goal
+
+    // When adding a new goal, automatically apply the unallocated pool to its current savings
+    if (!goalToEdit && unallocatedPool > 0) {
+      finalGoal = {
+        ...goal,
+        currentAmount: parseFloat((goal.currentAmount + unallocatedPool).toFixed(2)),
+      }
+      setUnallocatedPool(0)
+      saveUnallocatedPool(0)
+    }
+
     const updated = goalToEdit
       ? goals.map(g => g.id === goal.id ? goal : g)  // replace existing goal
-      : [...goals, goal]                               // append new goal
+      : [...goals, finalGoal]                          // append new goal with pool applied
     setGoals(updated)
     saveGoals(updated)
     setView('dashboard')
@@ -58,7 +72,7 @@ function App() {
     setGoalToEdit(null)
   }
 
-  // When the user confirms income: save it, update goal amounts, then show the result screen
+  // When the user confirms income: save it, update goal amounts, stash leftover in pool
   function handleConfirmIncome(entry: IncomeEntry, results: AllocationResult[]) {
     const updatedEntries = [...incomeEntries, entry]
     setIncomeEntries(updatedEntries)
@@ -73,11 +87,22 @@ function App() {
     setGoals(updatedGoals)
     saveGoals(updatedGoals)
 
-    // Show the result screen instead of jumping straight to dashboard
+    // Any income not allocated to a goal goes into the unallocated pool
+    const totalAllocatedPercent = getTotalAllocated(goals)
+    const leftover = parseFloat((entry.amount * (1 - totalAllocatedPercent / 100)).toFixed(2))
+    if (leftover > 0) {
+      const newPool = parseFloat((unallocatedPool + leftover).toFixed(2))
+      setUnallocatedPool(newPool)
+      saveUnallocatedPool(newPool)
+    }
+
     setLastEntry(entry)
     setLastResults(results)
     setView('allocation-result')
   }
+
+  // How much % is still unallocated — pre-filled in GoalForm when adding a new goal
+  const remainingPercent = Math.max(0, 100 - getTotalAllocated(goals))
 
   return (
     <>
@@ -85,6 +110,7 @@ function App() {
       <Dashboard
         goals={goals}
         monthlyIncome={monthlyIncome}
+        unallocatedPool={unallocatedPool}
         onMonthlyIncomeChange={handleMonthlyIncomeChange}
         onAddGoal={() => setView('add-goal')}
         onEditGoal={handleEditGoal}
@@ -92,10 +118,12 @@ function App() {
         onLogIncome={() => setView('log-income')}
       />
 
-      {/* GoalForm slides in as a modal overlay when adding or editing */}
+      {/* GoalForm — pre-fills allocation % with remaining unallocated % when adding */}
       {(view === 'add-goal' || view === 'edit-goal') && (
         <GoalForm
           existingGoal={goalToEdit ?? undefined}
+          defaultAllocationPercent={goalToEdit ? undefined : remainingPercent}
+          unallocatedPool={goalToEdit ? 0 : unallocatedPool}
           onSave={handleSaveGoal}
           onCancel={handleCancel}
         />
