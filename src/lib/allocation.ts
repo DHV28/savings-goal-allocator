@@ -6,11 +6,16 @@
 import type { Goal, AllocationResult } from '../types'
 
 // Takes the income amount and the list of goals, returns how much each goal gets.
-// Only includes goals that have a non-zero allocation percent and haven't been reached yet.
-// Skipping reached goals means their % goes to the unallocated pool instead.
+// Only allocates to active goals — skips reached and expired ones.
+// Their % goes to the unallocated pool instead.
 export function allocateIncome(amount: number, goals: Goal[]): AllocationResult[] {
+  const today = new Date().toISOString().split('T')[0]
   return goals
-    .filter(goal => goal.allocationPercent > 0 && goal.currentAmount < goal.targetAmount)
+    .filter(goal =>
+      goal.allocationPercent > 0 &&
+      goal.currentAmount < goal.targetAmount &&
+      goal.deadline >= today  // skip expired goals
+    )
     .map(goal => ({
       goalId: goal.id,
       goalName: goal.name,
