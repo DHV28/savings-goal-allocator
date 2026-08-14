@@ -88,6 +88,23 @@ export default function Dashboard({
         )}
       </div>
 
+      {/* General savings balance — money not assigned to any goal accumulates here */}
+      {unallocatedPool > 0 && (
+        <div className="bg-[#1a1d27] border border-[#86efac]/20 rounded-2xl px-5 py-4 mb-6 flex items-center justify-between">
+          <div>
+            <p className="text-xs text-gray-300 mb-1 font-medium tracking-wide">General Savings</p>
+            <p className="text-[#86efac] text-xl font-bold">RM{unallocatedPool.toLocaleString()}</p>
+            <p className="text-xs text-gray-300 mt-1">Unallocated income — assigned to your next new goal</p>
+          </div>
+          <button
+            onClick={onAddGoal}
+            className="text-xs text-[#86efac] border border-[#86efac]/30 px-3 py-1.5 rounded-xl hover:bg-[#86efac]/10 transition-colors"
+          >
+            + Add Goal
+          </button>
+        </div>
+      )}
+
       {/* Goals at risk — only shown when there's a problem worth flagging */}
       {goalsAtRisk.length > 0 && monthlyIncome > 0 && (
         <div className="border border-[#fca5a5]/20 bg-[#fca5a5]/5 rounded-2xl px-5 py-4 mb-6">
@@ -165,16 +182,6 @@ export default function Dashboard({
               ))}
             </div>
           )}
-        </div>
-      )}
-
-      {/* Unallocated pool notice — shown when there's leftover money from past income entries */}
-      {unallocatedPool > 0 && (
-        <div className="bg-[#86efac]/5 border border-[#86efac]/20 rounded-2xl px-5 py-3 mb-4 flex items-center justify-between text-sm">
-          <span className="text-gray-400">
-            💰 <span className="text-[#86efac] font-medium">RM{unallocatedPool}</span> unallocated — will go to your next new goal
-          </span>
-          <button onClick={onAddGoal} className="text-[#86efac] text-xs hover:underline">Add a goal</button>
         </div>
       )}
 
