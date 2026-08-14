@@ -45,10 +45,10 @@ export default function Dashboard({
     <div className="min-h-screen bg-[#0f1117] text-gray-100 px-6 py-10 max-w-5xl mx-auto">
 
       {/* Header row — title + actions */}
-      <div className="flex items-center justify-between mb-8">
+      <div className="flex items-center justify-between mb-5">
         <div>
           <h1 className="text-2xl font-bold text-gray-100">Savings Goals</h1>
-          <p className="text-gray-500 text-sm mt-0.5">Track where your money goes each month</p>
+          <p className="text-gray-300 text-sm mt-0.5">Track where your money goes each month</p>
         </div>
         <button
           onClick={onLogIncome}
@@ -59,20 +59,20 @@ export default function Dashboard({
       </div>
 
       {/* Monthly income — shown inline, labelled clearly as what drives the pace calculations */}
-      <div className="flex items-center gap-3 mb-8">
-        <span className="text-gray-500 text-sm">Monthly income used for calculations:</span>
+      <div className="flex items-center gap-3 mb-6">
+        <span className="text-gray-200 text-sm">Monthly income used for calculations:</span>
         <div className="flex items-center gap-1 bg-[#1a1d27] border border-[#2a2d3a] rounded-xl px-3 py-1.5">
-          <span className="text-gray-400 text-sm">$</span>
+          <span className="text-gray-200 text-sm">$</span>
           <input
             type="number"
             value={monthlyIncome || ''}
             onChange={e => onMonthlyIncomeChange(parseFloat(e.target.value) || 0)}
             placeholder="3000"
-            className="bg-transparent text-gray-100 text-sm font-semibold outline-none w-24 placeholder:text-gray-600"
+            className="bg-transparent text-white text-sm font-semibold outline-none w-24 placeholder:text-gray-600"
           />
         </div>
         {allocationWarning && (
-          <span className="text-[#fde68a] text-xs">⚠ {allocationWarning}</span>
+          <span className="text-[#fde68a] text-sm">⚠ {allocationWarning}</span>
         )}
       </div>
 

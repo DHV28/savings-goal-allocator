@@ -41,7 +41,7 @@ export default function GoalCard({ goal, monthlyIncome, onEdit, onDelete }: Prop
 
       {/* Progress bar */}
       <div>
-        <div className="flex justify-between text-sm text-gray-400 mb-1">
+        <div className="flex justify-between text-sm text-gray-200 mb-1">
           <span>${goal.currentAmount.toLocaleString()} saved</span>
           <span>of ${goal.targetAmount.toLocaleString()}</span>
         </div>
@@ -51,27 +51,27 @@ export default function GoalCard({ goal, monthlyIncome, onEdit, onDelete }: Prop
             style={{ width: `${percentSaved}%`, backgroundColor: goal.color }}
           />
         </div>
-        <p className="text-xs text-gray-500 mt-1 text-right">{percentSaved.toFixed(1)}% complete</p>
+        <p className="text-xs text-gray-200 mt-1 text-right">{percentSaved.toFixed(1)}% complete</p>
       </div>
 
       {/* Monthly pace info — only shown when goal is still active */}
       {progress.status !== 'reached' && progress.status !== 'expired' && (
         <div className="grid grid-cols-2 gap-3">
           <div className="bg-[#12141e] rounded-xl p-3">
-            <p className="text-gray-500 text-xs mb-1">Need / month</p>
-            <p className="text-gray-100 font-medium text-sm">
+            <p className="text-gray-300 text-xs mb-1">Need / month</p>
+            <p className="text-white font-medium text-sm">
               {progress.requiredPerMonth === Infinity ? '—' : `$${progress.requiredPerMonth}`}
             </p>
           </div>
           <div className="bg-[#12141e] rounded-xl p-3">
-            <p className="text-gray-500 text-xs mb-1">Getting / month</p>
+            <p className="text-gray-300 text-xs mb-1">Getting / month</p>
             <p className="text-[#86efac] font-medium text-sm">${progress.projectedPerMonth}</p>
           </div>
         </div>
       )}
 
       {/* Footer — allocation info + edit/delete */}
-      <div className="flex items-center justify-between text-xs text-gray-500">
+      <div className="flex items-center justify-between text-xs text-gray-300">
         <span>{goal.allocationPercent}% of income · {progress.monthsLeft}mo left</span>
         <div className="flex gap-3">
           <button
