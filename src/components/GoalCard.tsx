@@ -42,8 +42,8 @@ export default function GoalCard({ goal, monthlyIncome, onEdit, onDelete }: Prop
       {/* Progress bar */}
       <div>
         <div className="flex justify-between text-sm text-gray-200 mb-1">
-          <span>${goal.currentAmount.toLocaleString()} saved</span>
-          <span>of ${goal.targetAmount.toLocaleString()}</span>
+          <span>RM{goal.currentAmount.toLocaleString()} saved</span>
+          <span>of RM{goal.targetAmount.toLocaleString()}</span>
         </div>
         <div className="h-2 bg-[#2a2d3a] rounded-full overflow-hidden">
           <div
@@ -60,12 +60,12 @@ export default function GoalCard({ goal, monthlyIncome, onEdit, onDelete }: Prop
           <div className="bg-[#12141e] rounded-xl p-3">
             <p className="text-gray-300 text-xs mb-1">Need / month</p>
             <p className="text-white font-medium text-sm">
-              {progress.requiredPerMonth === Infinity ? '—' : `$${progress.requiredPerMonth}`}
+              {progress.requiredPerMonth === Infinity ? '—' : `RM${progress.requiredPerMonth}`}
             </p>
           </div>
           <div className="bg-[#12141e] rounded-xl p-3">
             <p className="text-gray-300 text-xs mb-1">Getting / month</p>
-            <p className="text-[#86efac] font-medium text-sm">${progress.projectedPerMonth}</p>
+            <p className="text-[#86efac] font-medium text-sm">RM{progress.projectedPerMonth}</p>
           </div>
         </div>
       )}

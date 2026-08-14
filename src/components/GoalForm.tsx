@@ -112,7 +112,7 @@ export default function GoalForm({ existingGoal, defaultAllocationPercent, unall
 
           {/* Target amount */}
           <div>
-            <label className="text-xs text-gray-400 mb-1 block">Target amount ($)</label>
+            <label className="text-xs text-gray-400 mb-1 block">Target amount (RM)</label>
             <input
               type="number"
               value={targetAmount}
@@ -125,7 +125,7 @@ export default function GoalForm({ existingGoal, defaultAllocationPercent, unall
 
           {/* Already saved */}
           <div>
-            <label className="text-xs text-gray-400 mb-1 block">Already saved ($)</label>
+            <label className="text-xs text-gray-400 mb-1 block">Already saved (RM)</label>
             <input
               type="number"
               value={currentAmount}
@@ -196,7 +196,7 @@ export default function GoalForm({ existingGoal, defaultAllocationPercent, unall
           {/* Show the user that their unallocated pool will be applied to this goal */}
           {unallocatedPool > 0 && (
             <div className="bg-[#86efac]/10 border border-[#86efac]/20 rounded-xl px-4 py-3 text-sm text-[#86efac]">
-              💰 ${unallocatedPool} from past unallocated income will be added to this goal automatically.
+              💰 RM{unallocatedPool} from past unallocated income will be added to this goal automatically.
             </div>
           )}
 

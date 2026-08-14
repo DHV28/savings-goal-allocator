@@ -62,7 +62,7 @@ export default function Dashboard({
       <div className="flex items-center gap-3 mb-6">
         <span className="text-gray-200 text-sm">Monthly income used for calculations:</span>
         <div className="flex items-center gap-1 bg-[#1a1d27] border border-[#2a2d3a] rounded-xl px-3 py-1.5">
-          <span className="text-gray-200 text-sm">$</span>
+          <span className="text-gray-200 text-sm">RM</span>
           <input
             type="number"
             value={monthlyIncome || ''}
@@ -93,7 +93,7 @@ export default function Dashboard({
                     <span className="text-gray-300">{goal.name}</span>
                   </div>
                   <span className="text-gray-500 text-xs">
-                    ${shortfall} short per month —{' '}
+                    RM{shortfall} short per month —{' '}
                     <button onClick={() => onEditGoal(goal)} className="text-[#93c5fd] hover:underline">
                       fix it
                     </button>
@@ -130,7 +130,7 @@ export default function Dashboard({
       {unallocatedPool > 0 && (
         <div className="bg-[#86efac]/5 border border-[#86efac]/20 rounded-2xl px-5 py-3 mb-4 flex items-center justify-between text-sm">
           <span className="text-gray-400">
-            💰 <span className="text-[#86efac] font-medium">${unallocatedPool}</span> unallocated — will go to your next new goal
+            💰 <span className="text-[#86efac] font-medium">RM{unallocatedPool}</span> unallocated — will go to your next new goal
           </span>
           <button onClick={onAddGoal} className="text-[#86efac] text-xs hover:underline">Add a goal</button>
         </div>

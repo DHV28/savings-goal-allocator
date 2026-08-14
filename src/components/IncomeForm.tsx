@@ -56,7 +56,7 @@ export default function IncomeForm({ goals, onConfirm, onCancel }: Props) {
 
           {/* Amount */}
           <div>
-            <label className="text-xs text-gray-400 mb-1 block">Amount received ($)</label>
+            <label className="text-xs text-gray-400 mb-1 block">Amount received (RM)</label>
             <input
               type="number"
               value={amount}
@@ -98,14 +98,14 @@ export default function IncomeForm({ goals, onConfirm, onCancel }: Props) {
               {preview.map(r => (
                 <div key={r.goalId} className="flex justify-between text-sm">
                   <span className="text-gray-300">{r.goalName}</span>
-                  <span className="text-[#86efac] font-medium">+${r.allocated}</span>
+                  <span className="text-[#86efac] font-medium">+RM{r.allocated}</span>
                 </div>
               ))}
               {/* Show how much is not allocated to any goal */}
               {unallocated > 0 && (
                 <div className="flex justify-between text-sm border-t border-[#2a2d3a] pt-2 mt-1">
                   <span className="text-gray-500">Unallocated</span>
-                  <span className="text-gray-500">${unallocated}</span>
+                  <span className="text-gray-500">RM{unallocated}</span>
                 </div>
               )}
             </div>

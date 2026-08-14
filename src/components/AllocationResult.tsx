@@ -24,7 +24,7 @@ export default function AllocationResultScreen({ entry, results, totalIncome, on
           <p className="text-3xl mb-2">🎉</p>
           <h2 className="text-gray-100 font-bold text-xl">Income Logged!</h2>
           <p className="text-gray-500 text-sm mt-1">
-            ${totalIncome.toLocaleString()} received
+            RM{totalIncome.toLocaleString()} received
             {entry.note ? ` · ${entry.note}` : ''}
           </p>
         </div>
@@ -39,7 +39,7 @@ export default function AllocationResultScreen({ entry, results, totalIncome, on
                 <p className="text-gray-200 text-sm font-medium">{r.goalName}</p>
                 <p className="text-gray-500 text-xs">{r.allocationPercent}% of income</p>
               </div>
-              <span className="text-[#86efac] font-semibold">+${r.allocated}</span>
+              <span className="text-[#86efac] font-semibold">+RM{r.allocated}</span>
             </div>
           ))}
 
@@ -50,7 +50,7 @@ export default function AllocationResultScreen({ entry, results, totalIncome, on
                 <p className="text-gray-500 text-sm">Unallocated</p>
                 <p className="text-gray-600 text-xs">Not assigned to any goal</p>
               </div>
-              <span className="text-gray-500 font-semibold">${unallocated}</span>
+              <span className="text-gray-500 font-semibold">RM{unallocated}</span>
             </div>
           )}
         </div>
