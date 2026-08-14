@@ -26,10 +26,16 @@ export function allocateIncome(amount: number, goals: Goal[]): AllocationResult[
     }))
 }
 
-// Returns the total percentage allocated across all goals.
-// Useful to warn the user if they've gone over 100% or left some unallocated.
+// Returns the total percentage allocated across active goals only.
+// Reached and expired goals no longer compete for income, so their % shouldn't count.
 export function getTotalAllocated(goals: Goal[]): number {
-  return goals.reduce((sum, goal) => sum + goal.allocationPercent, 0)
+  const today = new Date()
+  return goals
+    .filter(goal =>
+      goal.currentAmount < goal.targetAmount &&
+      isAfter(parseISO(goal.deadline), today)
+    )
+    .reduce((sum, goal) => sum + goal.allocationPercent, 0)
 }
 
 // Checks if the percentages add up to exactly 100.
