@@ -124,6 +124,7 @@ function App() {
           existingGoal={goalToEdit ?? undefined}
           defaultAllocationPercent={goalToEdit ? undefined : remainingPercent}
           unallocatedPool={goalToEdit ? 0 : unallocatedPool}
+          monthlyIncome={monthlyIncome}
           onSave={handleSaveGoal}
           onCancel={handleCancel}
         />

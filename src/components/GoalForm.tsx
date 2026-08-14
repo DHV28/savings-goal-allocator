@@ -2,12 +2,14 @@
 // Opens as a full-screen overlay on top of the dashboard.
 
 import { useState } from 'react'
+import { differenceInMonths, parseISO, isAfter } from 'date-fns'
 import type { Goal } from '../types'
 
 interface Props {
   existingGoal?: Goal      // if passed in, we're editing — otherwise adding
   defaultAllocationPercent?: number  // pre-filled with remaining unallocated % when adding
   unallocatedPool?: number           // money sitting unallocated from past income entries
+  monthlyIncome?: number             // needed to calculate the suggested allocation %
   onSave: (goal: Goal) => void
   onCancel: () => void
 }
@@ -26,7 +28,7 @@ function generateId() {
   return Math.random().toString(36).slice(2, 10)
 }
 
-export default function GoalForm({ existingGoal, defaultAllocationPercent, unallocatedPool = 0, onSave, onCancel }: Props) {
+export default function GoalForm({ existingGoal, defaultAllocationPercent, unallocatedPool = 0, monthlyIncome = 0, onSave, onCancel }: Props) {
   // Pre-fill fields if editing, otherwise start blank (allocation % defaults to remaining unallocated)
   const [name, setName] = useState(existingGoal?.name ?? '')
   const [targetAmount, setTargetAmount] = useState(existingGoal?.targetAmount?.toString() ?? '')
@@ -37,6 +39,30 @@ export default function GoalForm({ existingGoal, defaultAllocationPercent, unall
   )
   const [color, setColor] = useState(existingGoal?.color ?? COLOUR_OPTIONS[0])
   const [error, setError] = useState('')
+
+  // Calculates the minimum % of monthly income needed to hit this goal by the deadline.
+  // Only works if target, current amount, deadline, and monthly income are all filled in.
+  function suggestAllocation() {
+    const target = parseFloat(targetAmount)
+    const current = parseFloat(currentAmount) || 0
+    const remaining = target - current
+
+    if (!deadline || !target || monthlyIncome <= 0 || remaining <= 0) return
+
+    const deadlineDate = parseISO(deadline)
+    const today = new Date()
+
+    if (!isAfter(deadlineDate, today)) return
+
+    const months = differenceInMonths(deadlineDate, today)
+    if (months <= 0) return
+
+    const neededPerMonth = remaining / months
+    const suggestedPercent = Math.ceil((neededPerMonth / monthlyIncome) * 100)
+
+    // Cap at 100 so we don't suggest something impossible
+    setAllocationPercent(Math.min(suggestedPercent, 100).toString())
+  }
 
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
@@ -122,11 +148,20 @@ export default function GoalForm({ existingGoal, defaultAllocationPercent, unall
             />
           </div>
 
-          {/* Allocation % */}
+          {/* Allocation % — with a suggest button that calculates the minimum needed */}
           <div>
-            <label className="text-xs text-gray-400 mb-1 block">
-              % of each paycheck to put here
-            </label>
+            <div className="flex items-center justify-between mb-1">
+              <label className="text-xs text-gray-400">% of each paycheck to put here</label>
+              {monthlyIncome > 0 && (
+                <button
+                  type="button"
+                  onClick={suggestAllocation}
+                  className="text-xs text-[#93c5fd] hover:underline"
+                >
+                  Suggest % for me
+                </button>
+              )}
+            </div>
             <input
               type="number"
               value={allocationPercent}
