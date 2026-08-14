@@ -1,5 +1,6 @@
 // The main screen — shows all goals, warnings, and action buttons.
 
+import { useState } from 'react'
 import type { Goal } from '../types'
 import { getTotalAllocated } from '../lib/allocation'
 import { getGoalProgress } from '../lib/goalProgress'
@@ -26,7 +27,18 @@ export default function Dashboard({
   onDeleteGoal,
   onLogIncome,
 }: Props) {
+  const [showDone, setShowDone] = useState(false)
   const totalPercent = getTotalAllocated(goals)
+
+  // Split goals into active vs done (reached or expired) — done ones are hidden by default
+  const activeGoals = goals.filter(g => {
+    const { status } = getGoalProgress(g, monthlyIncome)
+    return status !== 'reached' && status !== 'expired'
+  })
+  const doneGoals = goals.filter(g => {
+    const { status } = getGoalProgress(g, monthlyIncome)
+    return status === 'reached' || status === 'expired'
+  })
 
   const allocationWarning =
     goals.length > 0 && totalPercent !== 100
@@ -105,8 +117,8 @@ export default function Dashboard({
         </div>
       )}
 
-      {/* Goal cards */}
-      {goals.length === 0 ? (
+      {/* Active goal cards */}
+      {activeGoals.length === 0 && doneGoals.length === 0 ? (
         <div className="text-center py-24">
           <p className="text-4xl mb-4">🎯</p>
           <p className="text-lg font-medium text-gray-400">No goals yet</p>
@@ -114,7 +126,7 @@ export default function Dashboard({
         </div>
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
-          {goals.map(goal => (
+          {activeGoals.map(goal => (
             <GoalCard
               key={goal.id}
               goal={goal}
@@ -123,6 +135,36 @@ export default function Dashboard({
               onDelete={onDeleteGoal}
             />
           ))}
+        </div>
+      )}
+
+      {/* Completed & expired goals — collapsed by default */}
+      {doneGoals.length > 0 && (
+        <div className="mb-6">
+          <div className="flex items-center gap-3 mb-4">
+            <div className="flex-1 h-px bg-[#2a2d3a]" />
+            <button
+              onClick={() => setShowDone(prev => !prev)}
+              className="flex items-center gap-2 text-sm text-gray-300 hover:text-white transition-colors font-medium"
+            >
+              <span>{showDone ? '▾' : '▸'}</span>
+              <span>Completed & Expired ({doneGoals.length})</span>
+            </button>
+            <div className="flex-1 h-px bg-[#2a2d3a]" />
+          </div>
+          {showDone && (
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              {doneGoals.map(goal => (
+                <GoalCard
+                  key={goal.id}
+                  goal={goal}
+                  monthlyIncome={monthlyIncome}
+                  onEdit={onEditGoal}
+                  onDelete={onDeleteGoal}
+                />
+              ))}
+            </div>
+          )}
         </div>
       )}
 
