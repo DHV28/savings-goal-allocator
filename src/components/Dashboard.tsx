@@ -122,7 +122,7 @@ export default function Dashboard({
                     <span className="text-gray-300">{goal.name}</span>
                   </div>
                   <span className="text-gray-300 text-xs">
-                    RM{shortfall} short per month —{' '}
+                    {isFinite(shortfall) ? `RM${shortfall} short per month` : 'Cannot reach in time'} —{' '}
                     <button onClick={() => onEditGoal(goal)} className="text-[#93c5fd] hover:underline">
                       fix it
                     </button>

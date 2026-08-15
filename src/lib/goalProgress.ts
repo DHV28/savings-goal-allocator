@@ -16,7 +16,7 @@ export function monthsRemaining(deadline: string): number {
   // If the deadline has already passed, return 0
   if (!isAfter(deadlineDate, today)) return 0
 
-  return differenceInMonths(deadlineDate, today)
+  return Math.max(differenceInMonths(deadlineDate, today), 1)
 }
 
 // How much the user needs to save per month to hit the goal in time
