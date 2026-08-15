@@ -121,6 +121,7 @@ function App() {
       {/* GoalForm — pre-fills allocation % with remaining unallocated % when adding */}
       {(view === 'add-goal' || view === 'edit-goal') && (
         <GoalForm
+          key={view === 'edit-goal' ? goalToEdit?.id : 'new'}
           existingGoal={goalToEdit ?? undefined}
           defaultAllocationPercent={goalToEdit ? undefined : remainingPercent}
           unallocatedPool={goalToEdit ? 0 : unallocatedPool}
