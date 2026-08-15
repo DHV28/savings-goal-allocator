@@ -18,12 +18,12 @@ export function allocateIncome(amount: number, goals: Goal[]): AllocationResult[
       goal.currentAmount < goal.targetAmount &&
       isAfter(parseISO(goal.deadline), today)  // skip expired goals
     )
-    .map(goal => ({
-      goalId: goal.id,
-      goalName: goal.name,
-      allocationPercent: goal.allocationPercent,
-      allocated: parseFloat(((goal.allocationPercent / 100) * amount).toFixed(2)), // 2 d.p
-    }))
+    .map(goal => {
+      const fullAmount = (goal.allocationPercent / 100) * amount
+      const remaining = goal.targetAmount - goal.currentAmount
+      const allocated = parseFloat(Math.min(fullAmount, remaining).toFixed(2))
+      return { goalId: goal.id, goalName: goal.name, allocationPercent: goal.allocationPercent, allocated }
+    })
 }
 
 // Returns the total percentage allocated across active goals only.

@@ -121,7 +121,7 @@ export default function Dashboard({
                     <div className="w-2 h-2 rounded-full" style={{ backgroundColor: goal.color }} />
                     <span className="text-gray-300">{goal.name}</span>
                   </div>
-                  <span className="text-gray-500 text-xs">
+                  <span className="text-gray-300 text-xs">
                     RM{shortfall} short per month —{' '}
                     <button onClick={() => onEditGoal(goal)} className="text-[#93c5fd] hover:underline">
                       fix it
@@ -138,8 +138,8 @@ export default function Dashboard({
       {activeGoals.length === 0 && doneGoals.length === 0 ? (
         <div className="text-center py-24">
           <p className="text-4xl mb-4">🎯</p>
-          <p className="text-lg font-medium text-gray-400">No goals yet</p>
-          <p className="text-sm text-gray-600 mt-1">Add your first savings goal to get started</p>
+          <p className="text-lg font-medium text-gray-200">No goals yet</p>
+          <p className="text-sm text-gray-400 mt-1">Add your first savings goal to get started</p>
         </div>
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
@@ -188,7 +188,7 @@ export default function Dashboard({
       {/* Add goal */}
       <button
         onClick={onAddGoal}
-        className="w-full border-2 border-dashed border-[#2a2d3a] hover:border-[#86efac]/40 text-gray-600 hover:text-[#86efac] rounded-2xl py-4 text-sm font-medium transition-colors"
+        className="w-full border-2 border-dashed border-[#2a2d3a] hover:border-[#86efac]/40 text-gray-400 hover:text-[#86efac] rounded-2xl py-4 text-sm font-medium transition-colors"
       >
         + Add Goal
       </button>

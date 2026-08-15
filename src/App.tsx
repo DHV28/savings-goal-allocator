@@ -4,7 +4,7 @@
 import { useState } from 'react'
 import type { Goal, IncomeEntry, AllocationResult } from './types'
 import { loadGoals, saveGoals, loadIncome, saveIncome, loadUnallocatedPool, saveUnallocatedPool } from './lib/storage'
-import { getTotalAllocated } from './lib/allocation'
+import { getTotalAllocated } from './lib/allocation' // used for remainingPercent below
 import Dashboard from './components/Dashboard'
 import GoalForm from './components/GoalForm'
 import IncomeForm from './components/IncomeForm'
@@ -91,8 +91,8 @@ function App() {
     saveGoals(updatedGoals)
 
     // Any income not allocated to a goal goes into the unallocated pool
-    const totalAllocatedPercent = getTotalAllocated(goals)
-    const leftover = parseFloat((entry.amount * (1 - totalAllocatedPercent / 100)).toFixed(2))
+    const totalActuallyAllocated = results.reduce((sum, r) => sum + r.allocated, 0)
+    const leftover = parseFloat((entry.amount - totalActuallyAllocated).toFixed(2))
     if (leftover > 0) {
       const newPool = parseFloat((unallocatedPool + leftover).toFixed(2))
       setUnallocatedPool(newPool)

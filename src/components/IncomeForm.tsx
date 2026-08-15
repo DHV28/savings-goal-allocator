@@ -56,7 +56,7 @@ export default function IncomeForm({ goals, onConfirm, onCancel }: Props) {
 
           {/* Amount */}
           <div>
-            <label className="text-xs text-gray-400 mb-1 block">Amount received (RM)</label>
+            <label className="text-xs text-gray-300 mb-1 block">Amount received (RM)</label>
             <input
               type="number"
               value={amount}
@@ -69,7 +69,7 @@ export default function IncomeForm({ goals, onConfirm, onCancel }: Props) {
 
           {/* Date */}
           <div>
-            <label className="text-xs text-gray-400 mb-1 block">Date received</label>
+            <label className="text-xs text-gray-300 mb-1 block">Date received</label>
             <input
               type="date"
               value={date}
@@ -81,7 +81,7 @@ export default function IncomeForm({ goals, onConfirm, onCancel }: Props) {
 
           {/* Note */}
           <div>
-            <label className="text-xs text-gray-400 mb-1 block">Note (optional)</label>
+            <label className="text-xs text-gray-300 mb-1 block">Note (optional)</label>
             <input
               type="text"
               value={note}
@@ -94,7 +94,7 @@ export default function IncomeForm({ goals, onConfirm, onCancel }: Props) {
           {/* Live allocation preview */}
           {preview.length > 0 && (
             <div className="bg-[#12141e] rounded-xl p-4 flex flex-col gap-2">
-              <p className="text-xs text-gray-500 mb-1">How this income will be split</p>
+              <p className="text-xs text-gray-300 mb-1">How this income will be split</p>
               {preview.map(r => (
                 <div key={r.goalId} className="flex justify-between text-sm">
                   <span className="text-gray-300">{r.goalName}</span>
@@ -104,8 +104,8 @@ export default function IncomeForm({ goals, onConfirm, onCancel }: Props) {
               {/* Show how much is not allocated to any goal */}
               {unallocated > 0 && (
                 <div className="flex justify-between text-sm border-t border-[#2a2d3a] pt-2 mt-1">
-                  <span className="text-gray-500">Unallocated</span>
-                  <span className="text-gray-500">RM{unallocated}</span>
+                  <span className="text-gray-300">Unallocated</span>
+                  <span className="text-gray-300">RM{unallocated}</span>
                 </div>
               )}
             </div>
@@ -117,7 +117,7 @@ export default function IncomeForm({ goals, onConfirm, onCancel }: Props) {
             <button
               type="button"
               onClick={onCancel}
-              className="flex-1 border border-[#2a2d3a] text-gray-400 hover:text-gray-200 rounded-xl py-3 text-sm transition-colors"
+              className="flex-1 border border-[#2a2d3a] text-gray-300 hover:text-white rounded-xl py-3 text-sm transition-colors"
             >
               Cancel
             </button>

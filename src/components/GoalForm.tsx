@@ -100,7 +100,7 @@ export default function GoalForm({ existingGoal, defaultAllocationPercent, unall
 
           {/* Goal name */}
           <div>
-            <label className="text-xs text-gray-400 mb-1 block">Goal name</label>
+            <label className="text-xs text-gray-300 mb-1 block">Goal name</label>
             <input
               type="text"
               value={name}
@@ -112,7 +112,7 @@ export default function GoalForm({ existingGoal, defaultAllocationPercent, unall
 
           {/* Target amount */}
           <div>
-            <label className="text-xs text-gray-400 mb-1 block">Target amount (RM)</label>
+            <label className="text-xs text-gray-300 mb-1 block">Target amount (RM)</label>
             <input
               type="number"
               value={targetAmount}
@@ -125,7 +125,7 @@ export default function GoalForm({ existingGoal, defaultAllocationPercent, unall
 
           {/* Already saved */}
           <div>
-            <label className="text-xs text-gray-400 mb-1 block">Already saved (RM)</label>
+            <label className="text-xs text-gray-300 mb-1 block">Already saved (RM)</label>
             <input
               type="number"
               value={currentAmount}
@@ -138,7 +138,7 @@ export default function GoalForm({ existingGoal, defaultAllocationPercent, unall
 
           {/* Deadline */}
           <div>
-            <label className="text-xs text-gray-400 mb-1 block">Deadline</label>
+            <label className="text-xs text-gray-300 mb-1 block">Deadline</label>
             <input
               type="date"
               value={deadline}
@@ -151,7 +151,7 @@ export default function GoalForm({ existingGoal, defaultAllocationPercent, unall
           {/* Allocation % — with a suggest button that calculates the minimum needed */}
           <div>
             <div className="flex items-center justify-between mb-1">
-              <label className="text-xs text-gray-400">% of each paycheck to put here</label>
+              <label className="text-xs text-gray-300">% of each paycheck to put here</label>
               {monthlyIncome > 0 && (
                 <button
                   type="button"
@@ -175,7 +175,7 @@ export default function GoalForm({ existingGoal, defaultAllocationPercent, unall
 
           {/* Colour picker */}
           <div>
-            <label className="text-xs text-gray-400 mb-2 block">Colour</label>
+            <label className="text-xs text-gray-300 mb-2 block">Colour</label>
             <div className="flex gap-3">
               {COLOUR_OPTIONS.map(c => (
                 <button
@@ -210,7 +210,7 @@ export default function GoalForm({ existingGoal, defaultAllocationPercent, unall
             <button
               type="button"
               onClick={onCancel}
-              className="flex-1 border border-[#2a2d3a] text-gray-400 hover:text-gray-200 rounded-xl py-3 text-sm transition-colors"
+              className="flex-1 border border-[#2a2d3a] text-gray-300 hover:text-white rounded-xl py-3 text-sm transition-colors"
             >
               Cancel
             </button>
