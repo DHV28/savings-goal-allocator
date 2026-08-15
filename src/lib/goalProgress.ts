@@ -59,7 +59,7 @@ export function getGoalProgress(goal: Goal, monthlyIncome: number): GoalProgress
 
   if (goal.currentAmount >= goal.targetAmount) {
     status = 'reached'
-  } else if (monthsLeft === 0) {
+  } else if (!isAfter(parseISO(goal.deadline), new Date())) {
     status = 'expired'
   } else if (projectedPerMonth >= requiredPerMonth) {
     status = 'on-track'
