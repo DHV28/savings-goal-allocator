@@ -39,12 +39,15 @@ function App() {
 
     // When adding a new goal, automatically apply the unallocated pool to its current savings
     if (!goalToEdit && unallocatedPool > 0) {
+      const needed = goal.targetAmount - goal.currentAmount
+      const toApply = parseFloat(Math.min(unallocatedPool, needed).toFixed(2))
+      const leftover = parseFloat((unallocatedPool - toApply).toFixed(2))
       finalGoal = {
         ...goal,
-        currentAmount: parseFloat((goal.currentAmount + unallocatedPool).toFixed(2)),
+        currentAmount: parseFloat((goal.currentAmount + toApply).toFixed(2)),
       }
-      setUnallocatedPool(0)
-      saveUnallocatedPool(0)
+      setUnallocatedPool(leftover)
+      saveUnallocatedPool(leftover)
     }
 
     const updated = goalToEdit
